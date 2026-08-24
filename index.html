@@ -1,0 +1,905 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="馬來西亞旅遊">
+<title>馬來西亞旅遊指南 2026</title>
+<style>
+:root{
+  --sea:#0B6E6A;--sea2:#0D9B94;--sea3:#D6EFEE;
+  --jungle:#1B7A3E;--jungle2:#E8F5E9;
+  --sand:#F5EDD6;--sand2:#E8D5A3;
+  --dusk:#6C3D8F;--dusk2:#F3E8FF;
+  --flame:#C0392B;--flame2:#FCEBEB;
+  --ink:#1A2E35;--ink2:#3D5560;--mist:#8FA8B0;
+  --paper:#FAFCFC;--card:#FFFFFF;
+  --border:#E2ECEE;
+  --safe-top:env(safe-area-inset-top);
+  --safe-bot:env(safe-area-inset-bottom);
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html{scroll-behavior:smooth}
+body{
+  font-family:-apple-system,BlinkMacSystemFont,"Helvetica Neue",sans-serif;
+  background:var(--paper);color:var(--ink);
+  font-size:15px;line-height:1.6;
+  padding-bottom:calc(72px + var(--safe-bot));
+}
+
+/* ── NAV BAR ── */
+.nav{
+  position:fixed;bottom:0;left:0;right:0;
+  background:rgba(255,255,255,0.92);
+  backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+  border-top:0.5px solid var(--border);
+  display:grid;grid-template-columns:repeat(5,1fr);
+  padding-bottom:var(--safe-bot);
+  z-index:100;
+}
+.nav-btn{
+  display:flex;flex-direction:column;align-items:center;
+  gap:2px;padding:8px 4px 6px;
+  background:none;border:none;cursor:pointer;
+  font-size:10px;color:var(--mist);font-weight:500;
+  transition:color .15s;
+}
+.nav-btn.active{color:var(--sea)}
+.nav-icon{font-size:22px;line-height:1}
+
+/* ── PAGES ── */
+.page{display:none;min-height:100vh}
+.page.active{display:block}
+
+/* ── HERO ── */
+.hero{
+  background:linear-gradient(160deg,var(--sea) 0%,#064E4B 55%,#0D3B4F 100%);
+  color:white;padding:calc(52px + var(--safe-top)) 20px 32px;
+  position:relative;overflow:hidden;
+}
+.hero::before{
+  content:'';position:absolute;inset:0;
+  background:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+}
+.hero-flag{font-size:11px;letter-spacing:2px;opacity:.7;text-transform:uppercase;margin-bottom:8px}
+.hero-title{font-size:32px;font-weight:700;letter-spacing:-0.5px;line-height:1.15}
+.hero-sub{font-size:16px;opacity:.8;margin-top:6px}
+.hero-dates{
+  display:inline-flex;align-items:center;gap:8px;
+  margin-top:16px;background:rgba(255,255,255,.15);
+  border-radius:20px;padding:6px 14px;font-size:13px;
+}
+.hero-people{margin-top:10px;font-size:12px;opacity:.6;letter-spacing:.5px}
+
+/* ── QUICK CARDS ── */
+.quick-grid{
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:10px;padding:16px 16px 0;
+}
+.quick-card{
+  background:var(--card);border-radius:14px;
+  border:0.5px solid var(--border);padding:14px;
+}
+.quick-card .qc-label{font-size:10px;color:var(--mist);font-weight:600;letter-spacing:.5px;text-transform:uppercase}
+.quick-card .qc-val{font-size:15px;font-weight:700;color:var(--ink);margin-top:2px;line-height:1.3}
+.quick-card .qc-sub{font-size:11px;color:var(--mist);margin-top:1px}
+
+/* ── SECTION ── */
+.section{padding:20px 16px 0}
+.section-title{
+  font-size:12px;font-weight:700;letter-spacing:1px;
+  text-transform:uppercase;color:var(--sea);margin-bottom:10px;
+}
+
+/* ── INFO ROWS ── */
+.info-list{background:var(--card);border-radius:14px;border:0.5px solid var(--border);overflow:hidden}
+.info-row{
+  display:flex;align-items:flex-start;gap:10px;
+  padding:11px 14px;border-bottom:0.5px solid var(--border);
+}
+.info-row:last-child{border-bottom:none}
+.info-row .ir-icon{font-size:18px;flex-shrink:0;margin-top:1px}
+.info-row .ir-text{flex:1}
+.info-row .ir-label{font-size:11px;color:var(--mist);font-weight:600}
+.info-row .ir-val{font-size:14px;color:var(--ink);margin-top:1px;line-height:1.4}
+
+/* ── DAY CARDS ── */
+.day-card{
+  background:var(--card);border-radius:16px;
+  border:0.5px solid var(--border);
+  overflow:hidden;margin-bottom:12px;
+}
+.day-hdr{
+  display:flex;align-items:center;gap:0;
+  cursor:pointer;user-select:none;
+}
+.day-badge{
+  font-size:10px;font-weight:700;color:white;
+  padding:0 12px;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  min-height:60px;min-width:52px;
+}
+.day-info{flex:1;padding:12px 14px}
+.day-date{font-size:11px;color:var(--mist);font-weight:600}
+.day-title{font-size:14px;font-weight:700;color:var(--ink);margin-top:1px;line-height:1.3}
+.day-loc{font-size:11px;color:var(--mist);margin-top:2px}
+.day-chevron{font-size:18px;color:var(--mist);padding-right:14px;transition:transform .2s}
+.day-card.open .day-chevron{transform:rotate(180deg)}
+
+.day-body{display:none;border-top:0.5px solid var(--border)}
+.day-card.open .day-body{display:block}
+
+/* ── TIMELINE ── */
+.tl-item{display:flex;gap:10px;padding:10px 14px;border-bottom:0.5px solid var(--border)}
+.tl-item:last-child{border-bottom:none}
+.tl-left{width:52px;flex-shrink:0;text-align:right}
+.tl-time{font-size:11px;color:var(--mist);font-weight:600;line-height:1.3}
+.tl-right{flex:1}
+.tl-act{font-size:14px;font-weight:600;color:var(--ink);line-height:1.35}
+.tl-note{font-size:12px;color:var(--ink2);margin-top:3px;line-height:1.5}
+.tl-tags{display:flex;flex-wrap:wrap;gap:4px;margin-top:5px}
+.tag{font-size:10px;font-weight:600;padding:2px 8px;border-radius:20px}
+.tag-grab{background:#EAF3DE;color:#3B6D11}
+.tag-walk{background:#FAEEDA;color:#633806}
+.tag-fly{background:var(--flame2);color:var(--flame)}
+.tag-ticket{background:var(--dusk2);color:var(--dusk)}
+.tag-opt{background:#F2F6F7;color:#5F5E5A;border:0.5px dashed #B4B2A9}
+.tag-warn{background:#FFF3CD;color:#856404}
+
+.tl-alert{
+  margin:0 12px 10px;padding:9px 12px;
+  border-radius:10px;font-size:12px;line-height:1.5;
+}
+.tl-alert.warn{background:#FFF3CD;color:#7A5200}
+.tl-alert.info{background:var(--sea3);color:#085041}
+.tl-alert.opt{background:#F2F6F7;color:var(--ink2);border:0.5px dashed #B4B2A9}
+
+/* ── FLIGHTS TABLE ── */
+.flight-card{
+  background:var(--card);border-radius:14px;
+  border:0.5px solid var(--border);overflow:hidden;margin-bottom:10px;
+}
+.flight-row{
+  display:flex;align-items:center;gap:0;
+  border-bottom:0.5px solid var(--border);
+}
+.flight-row:last-child{border-bottom:none}
+.fl-airline{
+  width:56px;flex-shrink:0;
+  background:var(--flame);color:white;
+  font-size:11px;font-weight:700;
+  display:flex;align-items:center;justify-content:center;
+  min-height:56px;text-align:center;padding:4px;
+}
+.fl-body{flex:1;padding:9px 12px}
+.fl-route{font-size:13px;font-weight:700;color:var(--ink)}
+.fl-time{font-size:12px;color:var(--ink2);margin-top:2px}
+.fl-meta{font-size:11px;color:var(--mist);margin-top:1px}
+
+/* ── FOOD TABLE ── */
+.food-section-hdr{
+  display:flex;align-items:center;gap:8px;margin:14px 0 6px;
+}
+.food-cat{
+  font-size:10px;font-weight:700;color:white;
+  padding:3px 12px;border-radius:20px;
+}
+.food-card{
+  background:var(--card);border-radius:14px;
+  border:0.5px solid var(--border);overflow:hidden;margin-bottom:10px;
+}
+.food-item{border-bottom:0.5px solid var(--border)}
+.food-item:last-child{border-bottom:none}
+.food-hdr-row{
+  display:flex;align-items:center;padding:10px 14px 8px;
+  gap:10px;cursor:pointer;touch-action:manipulation;
+}
+.food-name{font-size:14px;font-weight:700;color:var(--ink)}
+.food-en{font-size:11px;color:var(--mist);margin-top:1px}
+.food-tags{display:flex;gap:4px;margin-left:auto;align-items:center;flex-shrink:0}
+.food-body{
+  display:none;padding:0 14px 12px;
+  font-size:13px;color:var(--ink2);line-height:1.6;
+}
+.food-item.open .food-body{display:block}
+
+/* ── TRANSPORT ── */
+.transport-card{
+  background:var(--card);border-radius:14px;
+  border:0.5px solid var(--border);overflow:hidden;margin-bottom:10px;
+}
+.tr-row{
+  display:flex;align-items:center;padding:10px 14px;
+  border-bottom:0.5px solid var(--border);gap:10px;
+}
+.tr-row:last-child{border-bottom:none}
+.tr-dest{flex:1;font-size:13px;font-weight:600;color:var(--ink)}
+.tr-time{font-size:12px;color:var(--sea);font-weight:700;white-space:nowrap}
+.tr-price{font-size:11px;color:var(--mist);white-space:nowrap}
+.tr-note{font-size:11px;color:var(--mist);margin-top:1px}
+
+/* ── CHECKLIST ── */
+.checklist{background:var(--card);border-radius:14px;border:0.5px solid var(--border);overflow:hidden}
+.check-item{
+  display:flex;align-items:center;gap:12px;
+  padding:11px 14px;border-bottom:0.5px solid var(--border);
+  cursor:pointer;touch-action:manipulation;
+}
+.check-item:last-child{border-bottom:none}
+.check-box{
+  width:22px;height:22px;border-radius:50%;
+  border:2px solid var(--border);flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;
+  transition:all .15s;color:white;font-size:13px;
+}
+.check-item.done .check-box{background:var(--sea);border-color:var(--sea)}
+.check-text{font-size:14px;color:var(--ink);flex:1;line-height:1.4}
+.check-item.done .check-text{text-decoration:line-through;color:var(--mist)}
+.check-progress{
+  text-align:center;padding:14px;font-size:13px;color:var(--mist);
+}
+.progress-bar{
+  height:4px;background:var(--border);border-radius:2px;
+  margin:8px 16px 4px;overflow:hidden;
+}
+.progress-fill{
+  height:100%;background:var(--sea);border-radius:2px;
+  transition:width .3s ease;
+}
+
+/* ── EMERGENCY ── */
+.sos-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.sos-btn{
+  background:var(--card);border:0.5px solid var(--border);
+  border-radius:14px;padding:14px;text-decoration:none;
+  display:flex;flex-direction:column;gap:4px;
+}
+.sos-btn.red{background:var(--flame2);border-color:#F5C6CB}
+.sos-icon{font-size:24px}
+.sos-label{font-size:11px;color:var(--mist);font-weight:600}
+.sos-val{font-size:14px;font-weight:700;color:var(--ink)}
+.sos-btn.red .sos-val{color:var(--flame)}
+
+/* ── HOTEL CARDS ── */
+.hotel-card{
+  background:var(--card);border-radius:14px;
+  border:0.5px solid var(--border);padding:14px;margin-bottom:10px;
+}
+.hotel-period{font-size:11px;color:var(--sea);font-weight:700;letter-spacing:.3px}
+.hotel-name{font-size:15px;font-weight:700;color:var(--ink);margin-top:3px}
+.hotel-area{font-size:12px;color:var(--mist);margin-top:1px}
+.hotel-detail{font-size:12px;color:var(--ink2);margin-top:6px;line-height:1.5}
+.hotel-badge{
+  display:inline-block;font-size:10px;font-weight:600;
+  padding:2px 8px;border-radius:10px;margin-top:5px;
+  background:var(--sea3);color:var(--sea);
+}
+</style>
+</head>
+<body>
+
+<!-- ══ PAGE: 總覽 ══ -->
+<div class="page active" id="page-home">
+  <div class="hero">
+    <div class="hero-flag">🇲🇾 馬來西亞 2026</div>
+    <div class="hero-title">檳城 × 蘭卡威</div>
+    <div class="hero-sub">7 天 6 夜旅遊指南</div>
+    <div class="hero-dates">📅 8/25（二）— 8/31（一）</div>
+    <div class="hero-people">LIU SHINPEI × HUANG HSUTUNG</div>
+  </div>
+
+  <div style="margin:12px 16px 0;background:#1A2E35;border-radius:14px;padding:14px;color:white">
+    <div style="font-size:11px;font-weight:700;letter-spacing:.5px;opacity:.6;text-transform:uppercase;margin-bottom:8px">📲 加到手機主畫面（離線使用）</div>
+    <div style="font-size:13px;line-height:1.7;opacity:.9">
+      <b>iPhone：</b>用 Safari 開啟 → 下方「分享」→「加入主畫面」<br>
+      <b>Android：</b>用 Chrome 開啟 → 右上角選單 → 「加入主畫面」<br>
+      <span style="opacity:.6;font-size:11px">完全離線可用，不需網路</span>
+    </div>
+  </div>
+  <div class="quick-grid">
+    <div class="quick-card">
+      <div class="qc-label">🛫 去程</div>
+      <div class="qc-val">CI731</div>
+      <div class="qc-sub">08/25 桃園 09:30 → 14:10</div>
+    </div>
+    <div class="quick-card">
+      <div class="qc-label">🛬 回程</div>
+      <div class="qc-val">CI732</div>
+      <div class="qc-sub">08/31 檳城 15:10 → 19:55</div>
+    </div>
+    <div class="quick-card">
+      <div class="qc-label">🛫 蘭卡威去</div>
+      <div class="qc-val">AK6241</div>
+      <div class="qc-sub">08/27 檳城 09:55 → 10:30</div>
+    </div>
+    <div class="quick-card">
+      <div class="qc-label">🛬 蘭卡威回</div>
+      <div class="qc-val">AK6243</div>
+      <div class="qc-sub">08/29 蘭卡威 14:30 → 15:05</div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">基本資訊</div>
+    <div class="info-list">
+      <div class="info-row"><div class="ir-icon">💰</div><div class="ir-text"><div class="ir-label">貨幣</div><div class="ir-val">馬來西亞令吉（MYR）　1 MYR ≈ 7.2 TWD</div></div></div>
+      <div class="info-row"><div class="ir-icon">🕐</div><div class="ir-text"><div class="ir-label">時差</div><div class="ir-val">UTC+8，與台灣相同，無時差</div></div></div>
+      <div class="info-row"><div class="ir-icon">🌡</div><div class="ir-text"><div class="ir-label">天氣</div><div class="ir-val">28–34°C，午後常有雷陣雨，多帶雨具</div></div></div>
+      <div class="info-row"><div class="ir-icon">🔌</div><div class="ir-text"><div class="ir-label">插座</div><div class="ir-val">Type G 英式三腳（需轉換插頭）</div></div></div>
+      <div class="info-row"><div class="ir-icon">💧</div><div class="ir-text"><div class="ir-label">飲水</div><div class="ir-val">自來水不可直飲，請購買瓶裝水</div></div></div>
+      <div class="info-row"><div class="ir-icon">🚗</div><div class="ir-text"><div class="ir-label">交通</div><div class="ir-val">檳城：Grab 叫車　蘭卡威：租車自駕</div></div></div>
+      <div class="info-row"><div class="ir-icon">📋</div><div class="ir-text"><div class="ir-label">訂位代號</div><div class="ir-val">華航 FE56NA　亞航 Y771YR</div></div></div>
+    </div>
+  </div>
+
+  <div class="section" style="padding-top:20px">
+    <div class="section-title">住宿一覽</div>
+    <div class="hotel-card">
+      <div class="hotel-period">08/25–08/27（2 晚）</div>
+      <div class="hotel-name">Citadines Connect Bertam Georgetown</div>
+      <div class="hotel-area">📍 Jalan Penang，喬治市核心</div>
+      <div class="hotel-detail">步行 5 分達 Hin Bus Depot、10 分達 KOMTAR</div>
+      <span class="hotel-badge">禁菸雙人房</span>
+    </div>
+    <div class="hotel-card">
+      <div class="hotel-period">08/27–08/29（2 晚）</div>
+      <div class="hotel-name">BaBa Boutique House Langkawi</div>
+      <div class="hotel-area">📍 Kedawang，珍南海灘附近</div>
+      <div class="hotel-detail">Tatami Room With Window，含早餐<br>退房：07:30–12:00　Check-in：15:00–22:30</div>
+      <span class="hotel-badge">含早餐</span>
+    </div>
+    <div class="hotel-card">
+      <div class="hotel-period">08/29–08/31（2 晚）</div>
+      <div class="hotel-name">Citadines Connect Bertam Georgetown</div>
+      <div class="hotel-area">📍 Jalan Penang，喬治市核心（同一間）</div>
+      <span class="hotel-badge">禁菸雙人房</span>
+    </div>
+  </div>
+  <div class="section" style="padding-top:20px">
+    <div class="section-title">💵 換錢所 & 現金提醒</div>
+    <div class="info-list">
+      <div class="info-row"><div class="ir-icon">🏦</div><div class="ir-text"><div class="ir-label">蘭卡威換錢所</div><div class="ir-val">機場入境大廳：Maybank（左）、CIMB（右），匯率不差可直接換<br>珍南海灘：Fortune Money Exchange（Cenang Mall 對面）、UAE Exchange（Jalan Pantai Cenang 16 號）<br>瓜鎮（Kuah Town）：匯率最好，但需開車約 20 分</div></div></div>
+      <div class="info-row"><div class="ir-icon">🏦</div><div class="ir-text"><div class="ir-label">檳城換錢所</div><div class="ir-val">Chulia Street 一帶換錢所最密集，匯率競爭激烈<br>從 Citadines 步行 10 分鐘可達，Chowrasta 市場附近也有</div></div></div>
+      <div class="info-row"><div class="ir-icon">💵</div><div class="ir-text"><div class="ir-label">現金需求提醒</div><div class="ir-val">租車押金 RM100–500（只收現金或電子錢包）<br>升旗山 Buggy RM30／車（只收現金）<br>丹絨魯蝙蝠洞 RM2／人（現場付）<br>日落郵輪碼頭費 RM10／人（現場付）<br>Grab 可綁信用卡，日常飲食多數攤位現金</div></div></div>
+      <div class="info-row"><div class="ir-icon">📋</div><div class="ir-text"><div class="ir-label">MDAC 入境申報</div><div class="ir-val">出發前 3 天內填寫（8/22–8/24）<br>網址：imigresen-online.kkm.gov.my</div></div></div>
+    </div>
+  </div>
+  <div style="height:16px"></div>
+</div>
+
+<!-- ══ PAGE: 行程 ══ -->
+<div class="page" id="page-itinerary">
+  <div style="padding:calc(16px + var(--safe-top)) 16px 0">
+    <div style="font-size:22px;font-weight:700;color:var(--ink);padding-top:8px">每日行程</div>
+    <div style="font-size:13px;color:var(--mist);margin-top:2px;margin-bottom:16px">點選日期展開詳細時刻表</div>
+  </div>
+
+  <!-- DAY 1 -->
+  <div style="padding:0 16px">
+  <div class="day-card" id="day1">
+    <div class="day-hdr" role="button" tabindex="0">
+      <div class="day-badge" style="background:var(--dusk)">Day<br>1</div>
+      <div class="day-info">
+        <div class="day-date">8/25（二）</div>
+        <div class="day-title">台北 → 檳城　阿依淡 + 升旗山</div>
+        <div class="day-loc">住：Citadines Bertam</div>
+      </div>
+      <div class="day-chevron">⌄</div>
+    </div>
+    <div class="day-body">
+      <div class="tl-item">
+        <div class="tl-left"><div class="tl-time">09:30</div></div>
+        <div class="tl-right">
+          <div class="tl-act">✈ CI731 起飛　桃園 T1 → 檳城</div>
+          <div class="tl-note">出發前 2.5 小時到機場。飛行 4hr 40min</div>
+          <div class="tl-tags"><span class="tag tag-fly">航班 CI731｜FE56NA</span></div>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-left"><div class="tl-time">14:10<br>落地</div></div>
+        <div class="tl-right">
+          <div class="tl-act">🛬 入境 → Citadines 放行李</div>
+          <div class="tl-note">機場入境，換 SIM / eSIM，換現金</div>
+          <div class="tl-tags"><span class="tag tag-grab">Grab 約 25–30 分｜RM30–40</span></div>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-left"><div class="tl-time">15:30</div></div>
+        <div class="tl-right">
+          <div class="tl-act">🥣 阿依淡菜市場（Ayer Itam Market）</div>
+          <div class="tl-note">必試：咖哩麵、亞參叻沙。下午攤位仍有開，吃完步行 5 分到纜車站</div>
+          <div class="tl-tags"><span class="tag tag-grab">Grab 約 15–20 分｜RM12–18</span></div>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-left"><div class="tl-time">16:30</div></div>
+        <div class="tl-right">
+          <div class="tl-act">🚡 升旗山纜車（Penang Hill Funicular）</div>
+          <div class="tl-note">菜市場步行 5 分至下站。Fast Lane 優先登車，避免排隊 45 分–1 小時</div>
+          <div class="tl-tags">
+            <span class="tag tag-walk">步行 5 分</span>
+            <span class="tag tag-ticket">Express Lane RM80／人　票號 609287 ✅　Counter 5/6 兌換</span>
+          </div>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-left"><div class="tl-time">17:00–<br>18:30</div></div>
+        <div class="tl-right">
+          <div class="tl-act">🏔 山頂觀景 + David Brown's + Buggy</div>
+          <div class="tl-note">搭 Buggy 沿山頂道路來回（約 10 分單程）欣賞全島景色。David Brown's 可喝下午茶</div>
+          <div class="tl-tags"><span class="tag tag-ticket">Buggy RM30／車（現金，4人共乘）</span></div>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-left"><div class="tl-time">18:30<br>下山</div></div>
+        <div class="tl-right">
+          <div class="tl-act">🚡 下山 → 返回飯店</div>
+          <div class="tl-tags"><span class="tag tag-grab">Grab 約 15–20 分｜RM12–18</span></div>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-left"><div class="tl-time">19:30</div></div>
+        <div class="tl-right">
+          <div class="tl-act">🍢 紐冷街小吃街（New Lane）晚餐</div>
+          <div class="tl-note">飯店步行約 10 分鐘，週四至週二 16:00–23:00，週三公休 ✅ 週二。必吃：炭烤炒粿條、沙嗲、BBQ 雞翅、蠔煎。現金為主</div>
+          <div class="tl-tags"><span class="tag tag-walk">步行 約 10 分</span></div>
+        </div>
+      </div>
+      <div class="tl-alert opt">📌 備選（有時間再去）：The Habitat 生態探索中心 RM60／人　豬籠草公園 Monkey Cup Garden RM12／人</div>
+      <div class="tl-alert warn">⚠ 升旗山 Fast Lane 票建議提前 Klook 預購；Buggy 只收現金</div>
+    </div>
+  </div>
+
+  <!-- DAY 2 -->
+  <div class="day-card" id="day2">
+    <div class="day-hdr" role="button" tabindex="0">
+      <div class="day-badge" style="background:var(--dusk)">Day<br>2</div>
+      <div class="day-info">
+        <div class="day-date">8/26（三）</div>
+        <div class="day-title">Chowrasta 早餐 + ESCAPE 全天</div>
+        <div class="day-loc">住：Citadines Bertam</div>
+      </div>
+      <div class="day-chevron">⌄</div>
+    </div>
+    <div class="day-body">
+      <div class="tl-item">
+        <div class="tl-left"><div class="tl-time">07:00–<br>08:30</div></div>
+        <div class="tl-right">
+          <div class="tl-act">🏪 Pasar Chowrasta（吉靈萬山市場）早餐</div>
+          <div class="tl-note">必試：椰漿飯（Nasi Lemak）、印度薄餅配咖哩（Roti Canai）、亞參叻沙。06:30 開市</div>
+          <div class="tl-tags"><span class="tag tag-walk">步行 5 分（同在 Jalan Penang）</span></div>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-left"><div class="tl-time">09:00<br>出發</div></div>
+        <div class="tl-right">
+          <div class="tl-act">🚗 Grab 前往 ESCAPE Penang</div>
+          <div class="tl-tags"><span class="tag tag-grab">Grab 約 30–40 分｜RM25–35</span></div>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-left"><div class="tl-time">10:00–<br>17:00</div></div>
+        <div class="tl-right">
+          <div class="tl-act">🎢 ESCAPE 逃生冒險主題樂園 全天</div>
+          <div class="tl-note">40+ 種設施，含飛索、攀岩、水上樂園。門票已購 ✅（訂單 T54799469，NT$3,014 / 2 人）。園內有餐廳解決午餐</div>
+          <div class="tl-note" style="margin-top:6px;padding:8px 10px;background:var(--surface2,#F2F6F7);border-radius:8px;border-left:3px solid var(--teal,#0B7A75)">
+            <b>🎒 行前準備 & 攜帶物品</b><br>
+            👕 <b>陸地區：</b>長袖長褲（大部分設施規定）+ 運動鞋<br>
+            🩱 <b>水上區：</b>泳裝另外帶，玩完陸地再換<br>
+            👟 最理想：水陸兩用 Aqua Shoes，全園適用免換鞋<br>
+            📱 <b>手機防水袋</b>（強烈建議！水滑梯 1,111m 全身濕）<br>
+            🧴 防曬乳 SPF50+（全天戶外）<br>
+            💧 自帶水（園內無免費飲水機）<br>
+            🧺 毛巾 + 備用衣物（離場換乾衣）<br>
+            📸 入場前需登錄照片做人臉辨識，注意照指示完成
+          </div>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-left"><div class="tl-time">17:30</div></div>
+        <div class="tl-right">
+          <div class="tl-act">🚗 Grab 返回飯店</div>
+          <div class="tl-tags"><span class="tag tag-grab">Grab 約 30–40 分｜RM25–35</span></div>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-left"><div class="tl-time">19:30</div></div>
+        <div class="tl-right">
+          <div class="tl-act">🦆 汕頭街夜市（Kimberley Street）晚餐</div>
+          <div class="tl-note">飯店步行約 10 分鐘，每日 17:00–24:00 全年無休。招牌：鴨肉粿汁、炭烤炒粿條、炭烤叉燒。現金為主</div>
+          <div class="tl-note">大件行李留在飯店，只帶 7kg 手提去蘭卡威</div>
+        </div>
+      </div>
+      <div class="tl-alert warn">⚠ 明日（8/27）AK6241 09:55 起飛，請於 08:15 前到檳城機場<b>國內廈</b></div>
+    </div>
+  </div>
+
+  <!-- DAY 3 -->
+  <div class="day-card" id="day3">
+    <div class="day-hdr" role="button" tabindex="0">
+      <div class="day-badge" style="background:var(--flame)">Day<br>3</div>
+      <div class="day-info">
+        <div class="day-date">8/27（四）</div>
+        <div class="day-title">檳城 → 蘭卡威　纜車 + 火舞晚餐</div>
+        <div class="day-loc">住：BaBa Boutique</div>
+      </div>
+      <div class="day-chevron">⌄</div>
+    </div>
+    <div class="day-body">
+      <div class="tl-item"><div class="tl-left"><div class="tl-time">08:15</div></div><div class="tl-right"><div class="tl-act">🚗 Grab 前往機場（國內廈）</div><div class="tl-tags"><span class="tag tag-grab">Grab 約 25–30 分｜RM30–40</span></div></div></div>
+      <div class="tl-item"><div class="tl-left"><div class="tl-time">09:55</div></div><div class="tl-right"><div class="tl-act">✈ AK6241 起飛　檳城 → 蘭卡威</div><div class="tl-note">35 分，Y771YR，10:30 抵達</div><div class="tl-tags"><span class="tag tag-fly">AK6241｜Y771YR</span></div></div></div>
+      <div class="tl-item"><div class="tl-left"><div class="tl-time">10:30</div></div><div class="tl-right"><div class="tl-act">🚗 取租車，前往東方村午餐</div><div class="tl-note">機場辦理取車，開往東方村（纜車入口）</div></div></div>
+      <div class="tl-item"><div class="tl-left"><div class="tl-time">11:30</div></div><div class="tl-right"><div class="tl-act">🍱 東方村午餐</div><div class="tl-note">纜車入口商區有多家餐廳</div></div></div>
+      <div class="tl-item"><div class="tl-left"><div class="tl-time">13:00–<br>16:00</div></div><div class="tl-right"><div class="tl-act">🚡 蘭卡威纜車 + 天空之橋（SkyBridge）</div><div class="tl-note">建議提前購票。纜車 15 分，SkyBridge 懸掛 700m 高空，景色壯觀</div><div class="tl-tags"><span class="tag tag-ticket">纜車 + SkyBridge 建議 Klook 預購</span></div></div></div>
+      <div class="tl-item"><div class="tl-left"><div class="tl-time">16:30</div></div><div class="tl-right"><div class="tl-act">🚢 首相碼頭燈塔散步</div><div class="tl-note">纜車附近海濱，欣賞安達曼海夕陽</div></div></div>
+      <div class="tl-item"><div class="tl-left"><div class="tl-time">18:30</div></div><div class="tl-right"><div class="tl-act">🏨 入住 BaBa Boutique House</div></div></div>
+      <div class="tl-item"><div class="tl-left"><div class="tl-time">20:00</div></div><div class="tl-right"><div class="tl-act">🔥 Hidden Langkawi 火舞表演晚餐</div><div class="tl-note">✅ 週四有火舞（週三除外），19:30 前入座</div></div></div>
+    </div>
+  </div>
+
+  <!-- DAY 4 -->
+  <div class="day-card" id="day4">
+    <div class="day-hdr" role="button" tabindex="0">
+      <div class="day-badge" style="background:var(--jungle)">Day<br>4</div>
+      <div class="day-info">
+        <div class="day-date">8/28（五）</div>
+        <div class="day-title">丹絨魯紅樹林 + 免稅購物 + 日落郵輪</div>
+        <div class="day-loc">住：BaBa Boutique</div>
+      </div>
+      <div class="day-chevron">⌄</div>
+    </div>
+    <div class="day-body">
+      <div class="tl-item"><div class="tl-left"><div class="tl-time">09:15</div></div><div class="tl-right"><div class="tl-act">🚗 出發前往丹絨魯紅樹林碼頭</div><div class="tl-note">珍南 → 丹絨魯碼頭約 30–35 分，10:00 集合請準時</div><div class="tl-tags"><span class="tag tag-car">自駕 約 30 分</span></div></div></div>
+      <div class="tl-item"><div class="tl-left"><div class="tl-time">10:00–<br>12:30</div></div><div class="tl-right"><div class="tl-act">🌿 丹絨魯海灘紅樹林之旅（Klook）</div><div class="tl-note">2.5 小時拼團遊船，含午餐。行程：鱷魚洞、蝙蝠洞、觀鷹、觀猴、魚場、安達曼海、Kilim 地質公園<br>⚠️ 蝙蝠洞門票需現場另付 RM2／人現金<br>⚠️ 黃寶貝殼類過敏（shellfish allergy）已備註，用餐時留意</div><div class="tl-tags"><span class="tag tag-ticket">Klook VYP371044｜各自掃碼 KLK3798829810 / KLK8750080043</span></div></div></div>
+      <div class="tl-item"><div class="tl-left"><div class="tl-time">13:00</div></div><div class="tl-right"><div class="tl-act">🛍 Cenang 免稅購物</div><div class="tl-note">Teow Soon Huat、ZON Duty Free。酒類入台每人免稅限 1 公升</div><div class="tl-tags"><span class="tag tag-car">自駕 丹絨魯 → 珍南 約 30 分</span></div></div></div>
+      <div class="tl-item"><div class="tl-left"><div class="tl-time">14:30</div></div><div class="tl-right"><div class="tl-act">🏖 珍南海灘休閒 / 游泳</div><div class="tl-note">稍作休息，準備傍晚郵輪行程</div></div></div>
+      <div class="tl-item"><div class="tl-left"><div class="tl-time">15:00<br>出發</div></div><div class="tl-right"><div class="tl-act">🚗 前往蘭卡威皇家遊艇俱樂部</div><div class="tl-note">珍南 → 皇家遊艇俱樂部（瓜鎮）約 20 分。15:30 出發，請 15:00 前抵達，找穿藍色 T 恤的工作人員，桌上迷你架寫著 Wise Lee Cruise</div><div class="tl-tags"><span class="tag tag-car">自駕 約 20 分</span></div></div></div>
+      <div class="tl-item"><div class="tl-left"><div class="tl-time">15:30–<br>19:30</div></div><div class="tl-right"><div class="tl-act">🚢 日落派對郵輪（含自助晚餐）</div><div class="tl-note">15:45 巡遊至巨鷹廣場 → 17:00 水上活動（槳板、浮墊、I Jump U Jump、按摩浴缸）→ 18:00 自助晚餐 → 18:30 賞日落 → 19:30 回港<br>含晚餐、雞尾酒、生啤暢飲。攜帶泳裝、毛巾、防曬、備用乾衣<br>⚠️ 碼頭入場費每人 RM10 現金，現場支付</div><div class="tl-tags"><span class="tag tag-ticket">Klook WHM928367｜憑證 KLK7049739604</span></div></div></div>
+    </div>
+  </div>
+
+  <!-- DAY 5 -->
+  <div class="day-card" id="day5">
+    <div class="day-hdr" role="button" tabindex="0">
+      <div class="day-badge" style="background:var(--flame)">Day<br>5</div>
+      <div class="day-info">
+        <div class="day-date">8/29（六）</div>
+        <div class="day-title">珍南採購 + AK6243 14:30 返回檳城 + 光大夜景 + 酒吧</div>
+        <div class="day-loc">住：Citadines Bertam</div>
+      </div>
+      <div class="day-chevron">⌄</div>
+    </div>
+    <div class="day-body">
+      <div class="tl-item"><div class="tl-left"><div class="tl-time">09:00</div></div><div class="tl-right"><div class="tl-act">🏨 退房，行李放車上</div></div></div>
+      <div class="tl-item"><div class="tl-left"><div class="tl-time">09:00–<br>11:00</div></div><div class="tl-right"><div class="tl-act">🛍 珍南海灘伴手禮採購</div><div class="tl-note">Teow Soon Huat 免稅超市（巧克力、零食、咖啡）→ ZON Duty Free（酒類、香水）→ Cenang 周邊小店（蠟染布、紀念品）</div><div class="tl-tags"><span class="tag tag-walk">步行可串聯</span></div></div></div>
+      <div class="tl-item"><div class="tl-left"><div class="tl-time">11:30</div></div><div class="tl-right"><div class="tl-act">🍽 珍南午餐</div><div class="tl-note">最後一頓蘭卡威料理，輕鬆享用</div></div></div>
+      <div class="tl-item"><div class="tl-left"><div class="tl-time">12:30</div></div><div class="tl-right"><div class="tl-act">🚗 前往機場，辦理還車</div><div class="tl-note">珍南 → 機場約 20 分，預留 30 分辦還車手續</div><div class="tl-tags"><span class="tag tag-car">自駕 約 20 分</span></div></div></div>
+      <div class="tl-item"><div class="tl-left"><div class="tl-time">13:50<br>截止</div></div><div class="tl-right"><div class="tl-act">✈ AK6243 報到截止　蘭卡威 → 檳城</div><div class="tl-tags"><span class="tag tag-fly">AK6243 14:30 起飛｜Y771YR</span></div></div></div>
+      <div class="tl-item"><div class="tl-left"><div class="tl-time">15:05</div></div><div class="tl-right"><div class="tl-act">🛬 抵達檳城國內廈 → Grab 入住 Citadines</div><div class="tl-tags"><span class="tag tag-grab">Grab 約 25–30 分｜RM30–40</span></div></div></div>
+      <div class="tl-item"><div class="tl-left"><div class="tl-time">16:30</div></div><div class="tl-right"><div class="tl-act">☕ 稍作休息、梳洗換裝</div><div class="tl-note">今晚有 KOMTAR + 酒吧，建議換裝後出門</div></div></div>
+      <div class="tl-item"><div class="tl-left"><div class="tl-time">18:30</div></div><div class="tl-right"><div class="tl-act">🍽 晚餐　喬治市覓食</div><div class="tl-note">亞美尼亞街或 Hin Bus Depot 一帶隨意選</div><div class="tl-tags"><span class="tag tag-walk">步行 5–10 分</span></div></div></div>
+      <div class="tl-item"><div class="tl-left"><div class="tl-time">20:00–<br>21:00</div></div><div class="tl-right"><div class="tl-act">🏢 光大大廈（KOMTAR）空中夜景</div><div class="tl-note">日–六 10:00–22:00（週二 19:00 關）✅ 週六。夜晚俯瞰喬治市璀璨燈光與海峽</div><div class="tl-tags"><span class="tag tag-walk">步行 8–10 分</span></div></div></div>
+      <div class="tl-item"><div class="tl-left"><div class="tl-time">21:00</div></div><div class="tl-right"><div class="tl-act">🍸 Backdoor Bodega（已預約 21:00）</div><div class="tl-note">亞洲百大 Speakeasy，藏在 The Swagger Salon 後方（Hin Bus Depot 旁）。購買徽章含一杯調酒。必試：Kelapa Hotak RM35</div><div class="tl-note" style="margin-top:4px;padding:5px 8px;background:var(--bg-pro);border-radius:6px;color:var(--text-pro);font-size:10px">📅 週六 ✅ 有開　21:00 已預約，準時抵達</div><div class="tl-tags"><span class="tag tag-walk">步行 5 分（KOMTAR → Hin Bus Depot 旁）</span></div></div></div>
+      <div class="tl-alert opt" style="margin:6px 8px 8px;border:.5px dashed var(--border-strong);border-radius:6px;padding:6px 10px;font-size:10px;color:var(--text-secondary);line-height:1.7"><b style="color:var(--text-primary)">備選（若還有精神）</b><br>🏛 娘惹博物館 RM20，步行 10 分，約 1 小時<br>🔵 藍屋外觀拍照（導覽 11:00/13:30，今日趕不上，可改 8/30）</div>
+    </div>
+  </div>
+
+  <!-- DAY 6 -->
+  <div class="day-card" id="day6">
+    <div class="day-hdr" role="button" tabindex="0">
+      <div class="day-badge" style="background:var(--dusk)">Day<br>6</div>
+      <div class="day-info">
+        <div class="day-date">8/30（日）</div>
+        <div class="day-title">喬治市深度文化漫遊</div>
+        <div class="day-loc">住：Citadines Bertam</div>
+      </div>
+      <div class="day-chevron">⌄</div>
+    </div>
+    <div class="day-body">
+      <div class="tl-item"><div class="tl-left"><div class="tl-time">早餐</div></div><div class="tl-right"><div class="tl-act">☕ 飯店周邊早餐</div><div class="tl-note">SHIN 新 Café 或周邊老字號，白咖啡 + 咖椰烤土司</div></div></div>
+      <div class="tl-item"><div class="tl-left"><div class="tl-time">10:00–<br>17:00</div></div><div class="tl-right"><div class="tl-act">🎨 Hin Bus Depot 文創市集</div><div class="tl-note">✅ 週日開放（10:00–17:00）。壁畫、手作、咖啡廳</div><div class="tl-tags"><span class="tag tag-walk">步行 5 分</span></div></div></div>
+      <div class="tl-item"><div class="tl-left"><div class="tl-time">17:00–<br>19:00</div></div><div class="tl-right"><div class="tl-act">⛵ 姓周橋　夕陽黃金時段</div><div class="tl-note">17:00–19:00 光線最美，停留 1–2 小時</div><div class="tl-tags"><span class="tag tag-grab">Grab 5–8 分｜RM6–10</span></div></div></div>
+      <div class="tl-item"><div class="tl-left"><div class="tl-time">19:00</div></div><div class="tl-right"><div class="tl-act">🖼 亞美尼亞街壁畫 + 奶茶店</div><div class="tl-tags"><span class="tag tag-walk">步行 10 分</span></div></div></div>
+      <div class="tl-item"><div class="tl-left"><div class="tl-time">20:00</div></div><div class="tl-right"><div class="tl-act">🪔 小印度區晚餐</div><div class="tl-tags"><span class="tag tag-walk">步行 5 分</span></div></div></div>
+
+      
+    </div>
+  </div>
+
+  <!-- DAY 7 -->
+  <div class="day-card" id="day7">
+    <div class="day-hdr" role="button" tabindex="0">
+      <div class="day-badge" style="background:var(--flame)">Day<br>7</div>
+      <div class="day-info">
+        <div class="day-date">8/31（一）</div>
+        <div class="day-title">多春茶座 + 第一大道購物 + CI732 回台北</div>
+        <div class="day-loc">回程日</div>
+      </div>
+      <div class="day-chevron">⌄</div>
+    </div>
+    <div class="day-body">
+      <div class="tl-item"><div class="tl-left"><div class="tl-time">08:00</div></div><div class="tl-right"><div class="tl-act">☕ 多春茶座（Toh Soon Cafe）早餐</div><div class="tl-note">週一開放 ✅。Lebuh Campbell 旁小巷弄（Ban Heang 旁），步行約 10 分鐘。必試：炭烤咖椰烤土司、半生熟蛋、海南咖啡。早到避免排隊</div></div></div>
+      <div class="tl-item"><div class="tl-left"><div class="tl-time">09:30–<br>11:30</div></div><div class="tl-right"><div class="tl-act">🛍 第一大道購物中心（1st Avenue Mall）</div><div class="tl-note">每日 10:00–22:00。與 KOMTAR、Prangin Mall 天橋相連，步行可達。品牌選擇多，適合買衣服、化妝品、最後伴手禮。白咖啡、辣椒醬、娘惹糕點也可在 B1 超市補貨</div><div class="tl-tags"><span class="tag tag-walk">步行 約 10 分</span></div></div></div>
+      <div class="tl-item"><div class="tl-left"><div class="tl-time">12:00</div></div><div class="tl-right"><div class="tl-act">🏨 退房，前往機場</div><div class="tl-note">CI732 15:10 起飛，建議 12:30 前到達</div><div class="tl-tags"><span class="tag tag-grab">Grab 約 25–30 分｜RM30–40</span></div></div></div>
+      <div class="tl-item"><div class="tl-left"><div class="tl-time">15:10</div></div><div class="tl-right"><div class="tl-act">✈ CI732 起飛　檳城 → 桃園 T1</div><div class="tl-note">飛行 4hr 45min，19:55 抵達台北</div><div class="tl-tags"><span class="tag tag-fly">CI732｜FE56NA</span></div></div></div>
+      <div class="tl-item"><div class="tl-left"><div class="tl-time">19:55</div></div><div class="tl-right"><div class="tl-act">🏠 抵達桃園 T1　旅程結束！</div></div></div>
+    </div>
+  </div>
+  </div>
+  <div style="height:16px"></div>
+</div>
+
+<!-- ══ PAGE: 美食 ══ -->
+<div class="page" id="page-food">
+  <div style="padding:calc(16px + var(--safe-top)) 16px 0">
+    <div style="font-size:22px;font-weight:700;color:var(--ink);padding-top:8px">必吃美食清單</div>
+    <div style="font-size:13px;color:var(--mist);margin-top:2px;margin-bottom:4px">點選食物名稱展開介紹</div>
+  </div>
+
+  <div style="padding:0 16px">
+  <div class="food-section-hdr"><span class="food-cat" style="background:var(--flame)">麵食類</span></div>
+  <div class="food-card">
+    <div class="food-item" role="button" tabindex="0" onclick="toggleFood(this)">
+      <div class="food-hdr-row">
+        <div><div class="food-name">咖哩麵</div><div class="food-en">Curry Mee</div></div>
+        <div class="food-tags"><span class="tag tag-warn">熱食</span><span style="color:var(--mist)">›</span></div>
+      </div>
+      <div class="food-body">椰漿咖哩湯底，配黃麵或米粉，料多豐盛（蝦、魷魚、豬血、豆腐泡、蛤蠣）。湯頭濃郁香辣，必拌入桌上辣椒醬提味。阿依淡姐妹咖哩麵是最知名老字號。</div>
+    </div>
+    <div class="food-item" role="button" tabindex="0" onclick="toggleFood(this)">
+      <div class="food-hdr-row">
+        <div><div class="food-name">白咖哩麵</div><div class="food-en">White Curry Mee</div></div>
+        <div class="food-tags"><span class="tag tag-warn">熱食</span><span style="color:var(--mist)">›</span></div>
+      </div>
+      <div class="food-body">椰奶為底的白色咖哩湯，加薑、紅蔥頭、蝦及魚熬製，湯頭比紅咖哩更清甜濃郁，辛辣感溫和。搭辣椒醬更過癮，是近年超人氣的檳城特色麵食。</div>
+    </div>
+    <div class="food-item" role="button" tabindex="0" onclick="toggleFood(this)">
+      <div class="food-hdr-row">
+        <div><div class="food-name">亞參叻沙</div><div class="food-en">Asam Laksa</div></div>
+        <div class="food-tags"><span class="tag tag-ticket">名物</span><span style="color:var(--mist)">›</span></div>
+      </div>
+      <div class="food-body">羅望子和鯖魚熬成濃郁酸辣魚湯，配粗米粉，鋪滿薄荷、鳳梨、洋蔥絲、黃瓜、香蕉花。CNN 評選全球第七大街頭美食，來檳城絕對不能錯過的一碗。</div>
+    </div>
+    <div class="food-item" role="button" tabindex="0" onclick="toggleFood(this)">
+      <div class="food-hdr-row">
+        <div><div class="food-name">福建麵（蝦麵）</div><div class="food-en">Hokkien Mee</div></div>
+        <div class="food-tags"><span class="tag tag-warn">熱食</span><span style="color:var(--mist)">›</span></div>
+      </div>
+      <div class="food-body">在檳城稱「福建麵」，以蝦殼和豬骨長時間熬煮的鮮甜蝦湯為底，配黃麵或米粉，料有蝦、豬肉片、魚餅、豆芽和空心菜。湯頭鮮甜濃厚。</div>
+    </div>
+    <div class="food-item" role="button" tabindex="0" onclick="toggleFood(this)">
+      <div class="food-hdr-row">
+        <div><div class="food-name">爪哇麵</div><div class="food-en">Mee Jawa</div></div>
+        <div class="food-tags"><span class="tag tag-warn">熱食</span><span style="color:var(--mist)">›</span></div>
+      </div>
+      <div class="food-body">馬來風味黃麵，淋上以番茄、花生醬、辣椒和甜醬調製的厚實醬汁，酸甜微辣層次豐富。配料有馬鈴薯塊、豆腐乾、蝦餅和水煮蛋，七條路巴剎亮點。</div>
+    </div>
+  </div>
+
+  <div class="food-section-hdr"><span class="food-cat" style="background:var(--jungle)">飯食 / 小吃</span></div>
+  <div class="food-card">
+    <div class="food-item" role="button" tabindex="0" onclick="toggleFood(this)">
+      <div class="food-hdr-row">
+        <div><div class="food-name">椰漿飯</div><div class="food-en">Nasi Lemak</div></div>
+        <div class="food-tags"><span class="tag tag-ticket">馬來國民美食</span><span style="color:var(--mist)">›</span></div>
+      </div>
+      <div class="food-body">以椰漿和香蘭葉炊煮的香飯，搭配參峇辣椒醬、江魚仔、花生、黃瓜片和半熟蛋。口味鹹甜香辣兼具，早餐吃最地道，可加咖哩雞或炸蝦。</div>
+    </div>
+    <div class="food-item" role="button" tabindex="0" onclick="toggleFood(this)">
+      <div class="food-hdr-row">
+        <div><div class="food-name">蠔煎（蚵仔煎）</div><div class="food-en">Oyster Omelette</div></div>
+        <div class="food-tags"><span class="tag tag-warn">熱食</span><span style="color:var(--mist)">›</span></div>
+      </div>
+      <div class="food-body">鮮蚵裹地瓜粉漿和雞蛋煎製，外皮焦酥、內部軟嫩，蚵仔肥美多汁。檳城版本蚵仔份量特別多，淋甜辣醬和辣椒醬，路邊攤最受歡迎小吃，常大排長龍。</div>
+    </div>
+  </div>
+
+  <div class="food-section-hdr"><span class="food-cat" style="background:var(--dusk)">甜點 / 冰品</span></div>
+  <div class="food-card">
+    <div class="food-item" role="button" tabindex="0" onclick="toggleFood(this)">
+      <div class="food-hdr-row">
+        <div><div class="food-name">潮州煎蕊</div><div class="food-en">Cendol / Chendol</div></div>
+        <div class="food-tags"><span class="tag tag-ticket">名物</span><span style="color:var(--mist)">›</span></div>
+      </div>
+      <div class="food-body">刨冰甜品，以香蘭葉製成的翠綠米苔目條為主角，搭配椰漿、紅豆、仙草、椰糖（Gula Melaka）。「檳城路馳名潮州煎蕊」是最知名老店，排隊是常態。</div>
+    </div>
+  </div>
+
+  <div class="food-section-hdr"><span class="food-cat" style="background:var(--sea)">飲料</span></div>
+  <div class="food-card">
+    <div class="food-item" role="button" tabindex="0" onclick="toggleFood(this)">
+      <div class="food-hdr-row">
+        <div><div class="food-name">豆蔻汁</div><div class="food-en">Nutmeg Juice</div></div>
+        <div class="food-tags"><span class="tag tag-ticket">檳城獨有</span><span style="color:var(--mist)">›</span></div>
+      </div>
+      <div class="food-body">以檳城特產豆蔻果肉榨製，深橘紅色，口感酸甜微苦帶香料氣息，加梅粉後風味更豐富。Chowrasta 市場或喬治市老街咖啡廳都能找到，其他地方喝不到！</div>
+    </div>
+    <div class="food-item" role="button" tabindex="0" onclick="toggleFood(this)">
+      <div class="food-hdr-row">
+        <div><div class="food-name">白咖啡</div><div class="food-en">White Coffee</div></div>
+        <div class="food-tags"><span class="tag tag-warn">熱 / 冷</span><span style="color:var(--mist)">›</span></div>
+      </div>
+      <div class="food-body">以奶油炒製咖啡豆後沖泡，加煉乳調製，顏色偏淡、口感香滑不苦澀。早餐配咖椰烤土司是標配，各老字號咖啡廳出品不同，可多嚐幾家比較。</div>
+    </div>
+  </div>
+
+  <div class="tl-alert info" style="margin:0 0 16px">
+    💡 點餐小技巧：少辣說「kurang pedas」；不要辣說「tak pedas」或「no spicy」
+  </div>
+  </div>
+</div>
+
+<!-- ══ PAGE: 交通 ══ -->
+<div class="page" id="page-transport">
+  <div style="padding:calc(16px + var(--safe-top)) 16px 0">
+    <div style="font-size:22px;font-weight:700;color:var(--ink);padding-top:8px">交通參考</div>
+    <div style="font-size:13px;color:var(--mist);margin-top:2px;margin-bottom:16px">車程與費用僅供參考，實際依當日流量</div>
+  </div>
+  <div style="padding:0 16px">
+
+  <div class="section-title">檳城 Grab（從 Citadines 出發）</div>
+  <div class="transport-card">
+    <div class="tr-row"><div class="tr-dest"><div>Chowrasta 市場</div><div class="tr-note">或步行 5 分</div></div><div><div class="tr-time">5 分</div><div class="tr-price">RM4–6</div></div></div>
+    <div class="tr-row"><div class="tr-dest"><div>光大大廈 KOMTAR</div><div class="tr-note">或步行 10 分</div></div><div><div class="tr-time">3–5 分</div><div class="tr-price">RM4–6</div></div></div>
+    <div class="tr-row"><div class="tr-dest"><div>Hin Bus Depot</div><div class="tr-note">或步行 5 分</div></div><div><div class="tr-time">3–5 分</div><div class="tr-price">RM4–6</div></div></div>
+    <div class="tr-row"><div class="tr-dest"><div>和諧街 Harmony Street</div><div class="tr-note">或步行 12–15 分</div></div><div><div class="tr-time">5–7 分</div><div class="tr-price">RM5–8</div></div></div>
+    <div class="tr-row"><div class="tr-dest"><div>姓周橋（宗族碼頭）</div></div><div><div class="tr-time">5–8 分</div><div class="tr-price">RM6–10</div></div></div>
+    <div class="tr-row"><div class="tr-dest"><div>亞美尼亞街 / 小印度</div></div><div><div class="tr-time">5–7 分</div><div class="tr-price">RM5–8</div></div></div>
+    <div class="tr-row"><div class="tr-dest"><div>阿依淡菜市場</div><div class="tr-note">升旗山纜車站步行 5 分</div></div><div><div class="tr-time">15–20 分</div><div class="tr-price">RM12–18</div></div></div>
+    <div class="tr-row"><div class="tr-dest"><div>ESCAPE 逃生樂園</div><div class="tr-note">Teluk Bahang 西北角</div></div><div><div class="tr-time">30–40 分</div><div class="tr-price">RM25–35</div></div></div>
+    <div class="tr-row"><div class="tr-dest"><div>檳城機場</div><div class="tr-note">早上尖峰可能稍久</div></div><div><div class="tr-time">25–30 分</div><div class="tr-price">RM30–40</div></div></div>
+  </div>
+
+  <div class="section-title" style="margin-top:20px">蘭卡威自駕</div>
+  <div class="transport-card">
+    <div class="tr-row"><div class="tr-dest"><div>機場 → 東方村（纜車）</div></div><div><div class="tr-time">約 15 分</div></div></div>
+    <div class="tr-row"><div class="tr-dest"><div>機場 → BaBa Boutique</div></div><div><div class="tr-time">約 20 分</div></div></div>
+    <div class="tr-row"><div class="tr-dest"><div>珍南 → Wildlife Park</div></div><div><div class="tr-time">約 10 分</div></div></div>
+    <div class="tr-row"><div class="tr-dest"><div>珍南 → Kilim 碼頭</div><div class="tr-note">島嶼東北角，注意導航</div></div><div><div class="tr-time">約 30 分</div></div></div>
+    <div class="tr-row"><div class="tr-dest"><div>珍南 → 蘭卡威機場</div><div class="tr-note">預留 30 分還車手續</div></div><div><div class="tr-time">約 20 分</div></div></div>
+  </div>
+
+  <div class="section-title" style="margin-top:20px">升旗山（阿依淡出發）</div>
+  <div class="transport-card">
+    <div class="tr-row"><div class="tr-dest"><div>阿依淡菜市場 → 纜車下站</div></div><div><div class="tr-time">步行 5 分</div></div></div>
+    <div class="tr-row"><div class="tr-dest"><div>纜車下站 → 山頂</div><div class="tr-note">Fast Lane RM80，一般 RM30</div></div><div><div class="tr-time">5–10 分</div></div></div>
+    <div class="tr-row"><div class="tr-dest"><div>山頂 Buggy 導覽（來回）</div><div class="tr-note">現金 RM30，4 人共乘</div></div><div><div class="tr-time">約 20 分</div></div></div>
+  </div>
+  </div>
+  <div style="height:16px"></div>
+</div>
+
+<!-- ══ PAGE: 清單 ══ -->
+<div class="page" id="page-checklist">
+  <div style="padding:calc(16px + var(--safe-top)) 16px 0">
+    <div style="font-size:22px;font-weight:700;color:var(--ink);padding-top:8px">出發前清單</div>
+    <div style="font-size:13px;color:var(--mist);margin-top:2px">點選打勾，追蹤準備進度</div>
+  </div>
+  <div class="progress-bar"><div class="progress-fill" id="progress-fill" style="width:0%"></div></div>
+  <div class="check-progress" id="check-progress">0 / 16 完成</div>
+
+  <div style="padding:0 16px">
+  <div class="section-title">文件 & 訂單</div>
+  <div class="checklist" id="checklist-docs">
+    <div class="check-item" role="button" tabindex="0" onclick="toggleCheck(this)"><div class="check-box">✓</div><div class="check-text">護照效期確認（距 8/31 須 6 個月以上）</div></div>
+    <div class="check-item" role="button" tabindex="0" onclick="toggleCheck(this)"><div class="check-box">✓</div><div class="check-text">中華航空機票截圖（CI731/CI732，FE56NA）</div></div>
+    <div class="check-item" role="button" tabindex="0" onclick="toggleCheck(this)"><div class="check-box">✓</div><div class="check-text">亞洲航空機票截圖（AK6241/6243，Y771YR）</div></div>
+    <div class="check-item" role="button" tabindex="0" onclick="toggleCheck(this)"><div class="check-box">✓</div><div class="check-text">Citadines 訂房確認信（4 晚）</div></div>
+    <div class="check-item" role="button" tabindex="0" onclick="toggleCheck(this)"><div class="check-box">✓</div><div class="check-text">BaBa Boutique 訂房確認信（2 晚）</div></div>
+    <div class="check-item" role="button" tabindex="0" onclick="toggleCheck(this)"><div class="check-box">✓</div><div class="check-text">KKday 日落遊船訂單截圖</div></div>
+    <div class="check-item" role="button" tabindex="0" onclick="toggleCheck(this)"><div class="check-box">✓</div><div class="check-text">Klook 紅樹林生態遊訂單截圖</div></div>
+    <div class="check-item" role="button" tabindex="0" onclick="toggleCheck(this)"><div class="check-box">✓</div><div class="check-text">MDAC 入境申報（出發前 3 天內填寫）</div></div>
+  </div>
+
+  <div class="section-title" style="margin-top:16px">行李 & 裝備</div>
+  <div class="checklist">
+    <div class="check-item" role="button" tabindex="0" onclick="toggleCheck(this)"><div class="check-box">✓</div><div class="check-text">eSIM 啟用 / 馬來西亞 SIM 卡準備</div></div>
+    <div class="check-item" role="button" tabindex="0" onclick="toggleCheck(this)"><div class="check-box">✓</div><div class="check-text">Type G 三腳英式轉換插頭</div></div>
+    <div class="check-item" role="button" tabindex="0" onclick="toggleCheck(this)"><div class="check-box">✓</div><div class="check-text">換匯（馬來西亞令吉 MYR）</div></div>
+    <div class="check-item" role="button" tabindex="0" onclick="toggleCheck(this)"><div class="check-box">✓</div><div class="check-text">防曬乳（SPF50+ 推薦）</div></div>
+    <div class="check-item" role="button" tabindex="0" onclick="toggleCheck(this)"><div class="check-box">✓</div><div class="check-text">防蚊液（紅樹林行程必備）</div></div>
+    <div class="check-item" role="button" tabindex="0" onclick="toggleCheck(this)"><div class="check-box">✓</div><div class="check-text">輕薄外套（遊船 / 室內冷氣用）</div></div>
+    <div class="check-item" role="button" tabindex="0" onclick="toggleCheck(this)"><div class="check-box">✓</div><div class="check-text">泳裝 / 沙灘裝備</div></div>
+    <div class="check-item" role="button" tabindex="0" onclick="toggleCheck(this)"><div class="check-box">✓</div><div class="check-text">升旗山 Fast Lane 票、ESCAPE 票提前購買</div></div>
+  </div>
+
+  <div class="section-title" style="margin-top:20px">緊急聯絡</div>
+  <div class="sos-grid">
+    <a class="sos-btn red" href="tel:999"><div class="sos-icon">🚨</div><div class="sos-label">馬來西亞緊急</div><div class="sos-val">999</div></a>
+    <a class="sos-btn" href="tel:+60321480511"><div class="sos-icon">🇹🇼</div><div class="sos-label">台灣駐馬辦事處</div><div class="sos-val">+60-3-2148-0511</div></a>
+    <a class="sos-btn" href="tel:+886241290000"><div class="sos-icon">✈️</div><div class="sos-label">中華航空</div><div class="sos-val">+886-2-412-9000</div></a>
+    <a class="sos-btn" href="https://www.airasia.com"><div class="sos-icon">🛫</div><div class="sos-label">亞洲航空</div><div class="sos-val">airasia.com</div></a>
+  </div>
+  </div>
+  <div style="height:16px"></div>
+</div>
+
+<!-- ══ BOTTOM NAV ══ -->
+<nav class="nav">
+  <button class="nav-btn active" onclick="switchPage('home',this)">
+    <span class="nav-icon">🗺</span>總覽
+  </button>
+  <button class="nav-btn" onclick="switchPage('itinerary',this)">
+    <span class="nav-icon">📅</span>行程
+  </button>
+  <button class="nav-btn" onclick="switchPage('food',this)">
+    <span class="nav-icon">🍜</span>美食
+  </button>
+  <button class="nav-btn" onclick="switchPage('transport',this)">
+    <span class="nav-icon">🚗</span>交通
+  </button>
+  <button class="nav-btn" onclick="switchPage('checklist',this)">
+    <span class="nav-icon">✅</span>清單
+  </button>
+</nav>
+
+<script>
+// ── iOS fix: delegate touch events to handle div clicks on mobile ──
+document.addEventListener('DOMContentLoaded', function() {
+
+  // Day card toggles
+  document.querySelectorAll('.day-hdr').forEach(function(el) {
+    ['click','touchend'].forEach(function(evt) {
+      el.addEventListener(evt, function(e) {
+        if(evt==='touchend') e.preventDefault();
+        var card = el.closest('.day-card');
+        if(card) card.classList.toggle('open');
+      }, {passive:false});
+    });
+  });
+
+  // Food item toggles
+  document.querySelectorAll('.food-item').forEach(function(el) {
+    ['click','touchend'].forEach(function(evt) {
+      el.addEventListener(evt, function(e) {
+        if(evt==='touchend') e.preventDefault();
+        el.classList.toggle('open');
+      }, {passive:false});
+    });
+  });
+
+  // Checklist items
+  document.querySelectorAll('.check-item').forEach(function(el) {
+    ['click','touchend'].forEach(function(evt) {
+      el.addEventListener(evt, function(e) {
+        if(evt==='touchend') e.preventDefault();
+        el.classList.toggle('done');
+        updateProgress();
+      }, {passive:false});
+    });
+  });
+
+  updateProgress();
+});
+
+function switchPage(id, btn) {
+  document.querySelectorAll('.page').forEach(function(p){ p.classList.remove('active'); });
+  document.querySelectorAll('.nav-btn').forEach(function(b){ b.classList.remove('active'); });
+  document.getElementById('page-'+id).classList.add('active');
+  btn.classList.add('active');
+  window.scrollTo(0,0);
+}
+function toggleDay(id) {
+  var card = document.getElementById(id);
+  if(card) card.classList.toggle('open');
+}
+function toggleFood(el) {
+  var item = el.closest ? el.closest('.food-item') : el.parentElement;
+  if(item) item.classList.toggle('open');
+}
+function toggleCheck(el) {
+  el.classList.toggle('done');
+  updateProgress();
+}
+function updateProgress() {
+  var items = document.querySelectorAll('.check-item');
+  var done  = document.querySelectorAll('.check-item.done').length;
+  var total = items.length;
+  document.getElementById('progress-fill').style.width = (done/total*100)+'%';
+  document.getElementById('check-progress').textContent = done+' / '+total+' 完成';
+}
+</script>
+</body>
+</html>
